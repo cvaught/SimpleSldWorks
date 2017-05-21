@@ -29,43 +29,11 @@ namespace SimpleSldWorks
         {
             if (this.connectToSolidWorks())
             {
+                MessageBox.Show("Hello SolidWorks User Group!");
                 // get the path to the example part
-                String path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Example.SLDPRT");
+                //String path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Example.SLDPRT");
 
-                if (File.Exists(path))
-                {
-                    // open the example part in solidworks
-                    int errors = 0;
-                    ModelDoc2 swModel = swApp.OpenDoc2(path, (int)swDocumentTypes_e.swDocPART, true, false, true, ref errors);
-                    if (swModel != null)
-                    {
-                        PartDoc partDoc = (PartDoc)swModel;
-
-                        // get the solid bodies in the part
-                        var bodies = partDoc.GetBodies2((int)swBodyType_e.swSolidBody, false);
-
-                        ModelDocExtension swModExt = (ModelDocExtension)swModel.Extension;
-
-                        // iterate through each solid body and delete any hidden solidbodies
-                        foreach (Body2 body in bodies)
-                        {
-                            if (!body.Visible)
-                            {
-                                swModExt.SelectByID2(body.Name, "SOLIDBODY", 0, 0, 0, false, 0, null, 0);
-                                swModel.FeatureManager.InsertDeleteBody();
-                                swModel.ClearSelection();
-                            }
-                        }
-
-                        // export the result
-                        String desktopPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
-                        int warnings = 0;
-
-                        swModExt.SaveAs(Path.Combine(desktopPath, "Result.step"), 0, 0, null, ref errors, ref warnings);
-
-                        swApp.CloseAllDocuments(true);
-                    }
-                }
+               
 
                 this.releaseSolidWorks();
             }
