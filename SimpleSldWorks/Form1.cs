@@ -96,10 +96,11 @@ namespace SimpleSldWorks
                 {
 
                 }
+                this.killAnyInstances();
+
             }
             GC.Collect();
             swApp = null;
-            this.killAnyInstances();
         }
 
         public void killAnyInstances()
