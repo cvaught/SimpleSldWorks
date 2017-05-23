@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using SldWorks;
 using SwConst;
 using System.IO;
+using System.Diagnostics;
 
 
 namespace SimpleSldWorks
@@ -32,8 +33,6 @@ namespace SimpleSldWorks
                 MessageBox.Show("Hello SolidWorks User Group!");
                 // get the path to the example part
                 //String path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Example.SLDPRT");
-
-               
 
                 this.releaseSolidWorks();
             }
@@ -62,6 +61,7 @@ namespace SimpleSldWorks
 
                 if (!alreadyOpen)
                 {
+                    this.killAnyInstances();
                     Type swAppType = System.Type.GetTypeFromProgID(progID);
                     swApp = System.Activator.CreateInstance(swAppType) as SldWorks.SldWorks;
                     swApp.Visible = true;
@@ -98,6 +98,23 @@ namespace SimpleSldWorks
                 }
             }
             GC.Collect();
+            swApp = null;
+            this.killAnyInstances();
+        }
+
+        public void killAnyInstances()
+        {
+            try
+            {
+                foreach (Process proc in Process.GetProcessesByName("SLDWORKS"))
+                {
+                    proc.Kill();
+                }
+            }
+            catch
+            {
+
+            }
             swApp = null;
         }
     }
